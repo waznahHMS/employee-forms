@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MindBridge - Employee Forms</title>
 
-    <!-- Tabler Icons (open-source, no attribution required) -->
+    <!-- Tabler Icons - multiple CDN fallbacks -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/dist/tabler-icons.min.css" />
 
     <style>
@@ -148,6 +149,17 @@
 
         .form-icon i {
             font-size: 22px;
+            line-height: 1;
+        }
+
+        /* Fallback: if icon font fails, show emoji */
+        .form-icon .fallback {
+            display: none;
+            font-size: 20px;
+        }
+
+        .form-icon i:not([class*="ti-"]) + .fallback {
+            display: block;
         }
 
         .form-info {
@@ -243,7 +255,10 @@
             <!-- Leave Form -->
             <a href="https://tally.so/r/81WxGk" target="_blank" class="form-card" id="leaveLink">
                 <div class="form-card-left">
-                    <div class="form-icon"><i class="ti ti-calendar-check"></i></div>
+                    <div class="form-icon">
+                        <i class="ti ti-calendar-check"></i>
+                        <span class="fallback">📋</span>
+                    </div>
                     <div class="form-info">
                         <div class="form-title">Leave Request</div>
                         <div class="form-desc">Annual &bull; Sick &bull; Personal</div>
@@ -252,10 +267,13 @@
                 <span class="arrow">→</span>
             </a>
 
-            <!-- Monthly Contribution Form (NEW) -->
+            <!-- Monthly Contribution Form -->
             <a href="https://tally.so/r/rjpP4p" target="_blank" class="form-card" id="contributionLink">
                 <div class="form-card-left">
-                    <div class="form-icon"><i class="ti ti-coin"></i></div>
+                    <div class="form-icon">
+                        <i class="ti ti-coin"></i>
+                        <span class="fallback">💰</span>
+                    </div>
                     <div class="form-info">
                         <div class="form-title">Monthly Contribution</div>
                         <div class="form-desc">SSS &bull; Pag-IBIG &bull; PhilHealth</div>
@@ -267,7 +285,10 @@
             <!-- Reimbursement Form -->
             <a href="https://tally.so/r/EkgWL2" target="_blank" class="form-card" id="reimburseLink">
                 <div class="form-card-left">
-                    <div class="form-icon"><i class="ti ti-receipt-2"></i></div>
+                    <div class="form-icon">
+                        <i class="ti ti-receipt-2"></i>
+                        <span class="fallback">🧾</span>
+                    </div>
                     <div class="form-info">
                         <div class="form-title">Office Reimbursement</div>
                         <div class="form-desc">Supplies &bull; Printing &bull; Expenses</div>
@@ -329,6 +350,33 @@
                 container.style.opacity = '1';
                 container.style.transform = 'translateY(0)';
             }, 100);
+        });
+
+        /**
+         * Icon fallback detection
+         * If Tabler icons don't load, show emoji fallback
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            const icons = document.querySelectorAll('.form-icon i');
+            let iconLoaded = false;
+
+            icons.forEach(function(icon) {
+                const computedStyle = window.getComputedStyle(icon);
+                const fontFamily = computedStyle.fontFamily;
+                if (fontFamily && fontFamily.includes('tabler-icons')) {
+                    iconLoaded = true;
+                }
+            });
+
+            // If no icon loaded, show fallbacks
+            if (!iconLoaded) {
+                document.querySelectorAll('.fallback').forEach(function(el) {
+                    el.style.display = 'block';
+                });
+                document.querySelectorAll('.form-icon i').forEach(function(el) {
+                    el.style.display = 'none';
+                });
+            }
         });
     </script>
 
